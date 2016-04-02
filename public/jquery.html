@@ -1,0 +1,41 @@
+<!doctype html>
+<html ng-app>
+    <head>
+		<script src="http://cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+		<script src="js/base64.js"></script>
+		<!-- 
+        <script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		-->
+    </head>
+    <body>
+		<div >
+        please input your site: <input type="text" name="your_site" style="width:300px;"  ng-model="your_site"  placeholder="please input your site">
+		<input type="button" onclick="gen()" value="generate">
+        <hr>
+        output short site: <input type="text" readonly="readonly" name="response_site" style="width:300px;" ng-model="response_site"  placeholder="output short site">
+		</div>
+
+		<script>
+
+		function gen () {
+			var your_site = $('[name="your_site"]').val() ;
+			var msg_txt = encodeURIComponent (new Base64().encode(your_site));
+			$.ajax({ 
+				type: 'GET',
+				 url: "save" ,
+				data: {msg:msg_txt},
+				success: function(data){
+					if(data.indexOf("1:")>=0) {
+						var resp_site = data.substring(2);
+						$('[name="response_site"]').val(resp_site) ;
+					}else {
+						alert('request fail ! ');
+					}
+				}
+			});
+		}
+
+	</script>
+    </body>
+</html>

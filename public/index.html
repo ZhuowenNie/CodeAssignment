@@ -1,0 +1,42 @@
+<!doctype html>
+<html ng-app>
+    <head>
+        <script src="js/angular-1.0.1.min.js"></script>
+		<script src="js/base64.js"></script>
+    </head>
+    <body>
+		<div ng-controller="myCtr">
+        please input your site: <input type="text" name="your_site" style="width:300px;"  ng-model="your_site"  placeholder="please input your site">
+		<input type="button" ng-click="gen()" value="generate">
+        <hr>
+        output short site: <input type="text" readonly="readonly" name="response_site" style="width:300px;" value="{{response_site}}" ng-model="response_site"  placeholder="output short site">
+		</div>
+
+		<script>
+		function myCtr($scope, $http) {
+
+			$scope.gen = function() {
+			// base64 encode and url encode
+			var your_site = $scope.your_site;
+			if(your_site.substring(0,4)!="http"){
+				your_site = "http://" + your_site;
+			}
+			
+			var msg = encodeURIComponent (new Base64().encode(your_site));
+			// alert(msg);
+			var url="save?msg="+msg;
+				$http.get(url).success( function(response) {
+				  var data = response; 
+				  if(data.indexOf("1:")>=0) {
+						var resp_site = data.substring(2);
+						$scope.response_site = resp_site;
+					}else {
+						alert('request fail ! ');
+					}
+				});
+			}
+
+		}
+		</script>
+    </body>
+</html>
